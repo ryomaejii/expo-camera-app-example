@@ -45,11 +45,13 @@ function extractParagraphText(paragraph: any): string {
   if (!paragraph.words) return '';
 
   const text = paragraph.words
-    .map((word: any) => word.symbols.map((symbol: any) => symbol.text).join(''))
-    .join(' ');
+    .map(
+      (word: any) => word.symbols.map((symbol: any) => symbol.text).join('') // 単語内の文字は空白なしで結合
+    )
+    .join(''); // 単語間も空白なしで結合
 
-  // 文字間の空白を削除（単語間の空白は保持）
-  return text.replace(/\s+/g, ' ').trim();
+  // 余分な空白を削除
+  return text.replace(/\s+/g, '').trim();
 }
 
 // 本文を識別する関数
@@ -169,7 +171,7 @@ export async function performOCR(base64Image: string): Promise<OCRResult[]> {
       // フォールバック: 全体テキストを使用
       if (fullTextAnnotation.text) {
         console.log('OCR Debug - Using fallback full text');
-        const cleanedText = fullTextAnnotation.text.replace(/\s+/g, ' ').trim();
+        const cleanedText = fullTextAnnotation.text.replace(/\s+/g, '').trim();
         return [
           {
             text: cleanedText,
@@ -189,7 +191,7 @@ export async function performOCR(base64Image: string): Promise<OCRResult[]> {
       if (annotations.length > 0) {
         const fullText = annotations[0].description;
         console.log('OCR Debug - Full text length:', fullText.length);
-        const cleanedText = fullText.replace(/\s+/g, ' ').trim();
+        const cleanedText = fullText.replace(/\s+/g, '').trim();
 
         return [
           {
