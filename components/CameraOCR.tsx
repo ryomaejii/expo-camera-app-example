@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -115,26 +116,38 @@ export default function CameraOCR() {
             <View style={styles.processingContainer}>
               <ActivityIndicator size="large" />
               <ThemedText style={styles.processingText}>
-                テキストを解析中...
+                本文を解析中...
               </ThemedText>
             </View>
           ) : (
-            <View style={styles.ocrResults}>
+            <ScrollView
+              style={styles.ocrResults}
+              showsVerticalScrollIndicator={false}
+            >
               {ocrResult.length > 0 ? (
                 <View style={styles.ocrItem}>
                   <ThemedText type="subtitle" style={styles.ocrTitle}>
-                    認識された文章
+                    認識された段落
                   </ThemedText>
-                  <ThemedText style={styles.ocrText}>
-                    {ocrResult[0].text}
-                  </ThemedText>
+                  {ocrResult[0].text.split('\n\n').map((paragraph, index) => (
+                    <View key={index} style={styles.paragraphContainer}>
+                      <View style={styles.paragraphHeader}>
+                        <ThemedText style={styles.paragraphNumber}>
+                          段落 {index + 1}
+                        </ThemedText>
+                      </View>
+                      <ThemedText style={styles.paragraphText}>
+                        {paragraph}
+                      </ThemedText>
+                    </View>
+                  ))}
                 </View>
               ) : (
                 <ThemedText style={styles.noText}>
-                  テキストが検出されませんでした
+                  段落が検出されませんでした
                 </ThemedText>
               )}
-            </View>
+            </ScrollView>
           )}
 
           <TouchableOpacity style={styles.resetButton} onPress={resetCamera}>
@@ -248,5 +261,44 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  paragraphContainer: {
+    marginBottom: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 122, 255, 0.2)',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  paragraphHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+    paddingBottom: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0, 122, 255, 0.1)',
+  },
+  paragraphNumber: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#007AFF',
+    backgroundColor: 'rgba(0, 122, 255, 0.1)',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  paragraphText: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#333',
   },
 });
