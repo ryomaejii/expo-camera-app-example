@@ -1,50 +1,85 @@
-# Welcome to your Expo app 👋
+# Expo Camera App with OCR
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+カメラで撮った写真をGoogle Cloud Vision APIを使ってOCR（光学文字認識）でテキストを抽出するアプリです。
 
-## Get started
+## 機能
 
-1. Install dependencies
+- 📸 カメラで写真撮影
+- 🔍 Google Cloud Vision APIを使ったOCR
+- 📱 リアルタイムテキスト認識
+- 🎯 信頼度スコア表示
+- 🔄 カメラ切り替え（前面/背面）
 
-   ```bash
-   npm install
-   ```
+## セットアップ
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### 1. 依存関係のインストール
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Google Cloud Vision APIの設定
 
-## Learn more
+#### 方法1: APIキーを使用（推奨）
 
-To learn more about developing your project with Expo, look at the following resources:
+1. [Google Cloud Console](https://console.cloud.google.com/)にアクセス
+2. 新しいプロジェクトを作成または既存のプロジェクトを選択
+3. Cloud Vision APIを有効化
+4. **認証情報** → **認証情報を作成** → **APIキー**を選択
+5. 作成されたAPIキーをコピー
+6. `config/api.ts`ファイルの`GOOGLE_CLOUD_VISION_API_KEY`を実際のAPIキーに置き換え
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```typescript
+// config/api.ts
+export const GOOGLE_CLOUD_VISION_API_KEY = 'your_actual_api_key_here';
+```
 
-## Join the community
+#### 方法2: サービスアカウントキーを使用
 
-Join our community of developers creating universal apps.
+1. [Google Cloud Console](https://console.cloud.google.com/)にアクセス
+2. 新しいプロジェクトを作成または既存のプロジェクトを選択
+3. Cloud Vision APIを有効化
+4. **IAMと管理** → **サービスアカウント** → **サービスアカウントを作成**
+5. サービスアカウントに「Cloud Vision API ユーザー」ロールを付与
+6. **キーを作成** → **JSON**を選択してダウンロード
+7. ダウンロードしたJSONファイルを`cloud-vision.json`としてプロジェクトルートに配置
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### 3. アプリの起動
+
+```bash
+npm start
+```
+
+## 使用方法
+
+1. アプリを起動
+2. カメラ権限を許可
+3. テキストが含まれた画像を撮影
+4. OCR結果を確認
+
+## 技術スタック
+
+- React Native
+- Expo
+- TypeScript
+- Google Cloud Vision API
+- expo-camera
+
+## 注意事項
+
+- Google Cloud Vision APIの使用には料金が発生する場合があります
+- APIキーやサービスアカウントキーは公開リポジトリにコミットしないでください
+- 本番環境では環境変数を使用してAPIキーを管理することを推奨します
+
+## トラブルシューティング
+
+### 「テキストが検出されませんでした」エラー
+
+1. APIキーが正しく設定されているか確認
+2. Cloud Vision APIが有効化されているか確認
+3. 画像に十分なテキストが含まれているか確認
+4. ネットワーク接続を確認
+
+## ライセンス
+
+MIT
